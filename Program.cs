@@ -3,6 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using MillitaryService.Data;
+using MillitaryService.Helpers.Implementations;
+using MillitaryService.Helpers.Interfaces;
+using MillitaryService.Repositories;
+using MillitaryService.Repositories.Implementations;
+using MillitaryService.Repositories.Interfaces;
+using MillitaryService.Services.Implementations;
+using MillitaryService.Services.Interfaces;
 using Serilog;
 using System.Text;
 
@@ -13,28 +20,26 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 // Add services to the container.
 
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IAuthHelper, AuthHelper>();
+
 builder.Services.AddControllersWithViews();
 builder.Host.UseSerilog();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 string GetConnectionString = builder.Configuration.GetConnectionString("DefaultConnectionMySql");
 builder.Services.AddDbContextPool<LibraryDbContext>(options => options.UseMySql(GetConnectionString, ServerVersion.AutoDetect(GetConnectionString)));
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-    c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+    c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        Description = "JWT Authorization header using the Bearer scheme."
-    });
-    c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-    {
-        [new OpenApiSecuritySchemeReference("bearer", document)] = []
+        Title = "Military Service API",
+        Version = "v1"
     });
 });
 
@@ -57,6 +62,9 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
+builder.Services.AddEndpointsApiExplorer();
+
+
 
 var app = builder.Build();
 
@@ -69,35 +77,42 @@ if (!app.Environment.IsDevelopment())
 
 if (app.Environment.IsDevelopment())
 {
-
     app.UseSwagger();
-    app.UseSwaggerUI();
 
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/openapi/v1.json", "api1");
+        options.SwaggerEndpoint(
+            "/swagger/v1/swagger.json",
+            "Military Service API V1"
+        );
     });
 }
 
 // Configure the HTTP request pipeline.
 
 
+
+
 app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseCors(policy =>
+    policy.AllowAnyOrigin()
+          .AllowAnyHeader()
+          .AllowAnyMethod()
+);
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors(builder =>
-               builder
-                   .AllowAnyOrigin()
-                   .AllowAnyHeader()
-                   .AllowAnyMethod()
-           );
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Auth}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Auth}/{action=Index}/{id?}"
+).WithStaticAssets();
+
 
 app.Run();
