@@ -136,13 +136,15 @@ namespace MillitaryService.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("ParentUnitId")
-                        .HasColumnType("int");
+                    b.Property<long?>("ParentUnitId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("UnitTypeId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentUnitId");
 
                     b.HasIndex("UnitTypeId");
 
@@ -304,12 +306,6 @@ namespace MillitaryService.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -356,13 +352,19 @@ namespace MillitaryService.Migrations
 
             modelBuilder.Entity("MillitaryService.Models.MilitaryUnits", b =>
                 {
-                    b.HasOne("MillitaryService.Models.UnitTypes", "unitType")
+                    b.HasOne("MillitaryService.Models.MilitaryUnits", "ParentUnit")
+                        .WithMany("SubUnits")
+                        .HasForeignKey("ParentUnitId");
+
+                    b.HasOne("MillitaryService.Models.UnitTypes", "UnitType")
                         .WithMany()
                         .HasForeignKey("UnitTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("unitType");
+                    b.Navigation("ParentUnit");
+
+                    b.Navigation("UnitType");
                 });
 
             modelBuilder.Entity("MillitaryService.Models.Personnel", b =>
@@ -420,6 +422,11 @@ namespace MillitaryService.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("Personnel");
+                });
+
+            modelBuilder.Entity("MillitaryService.Models.MilitaryUnits", b =>
+                {
+                    b.Navigation("SubUnits");
                 });
 #pragma warning restore 612, 618
         }

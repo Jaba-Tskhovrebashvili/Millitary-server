@@ -32,9 +32,15 @@ namespace MillitaryService.Data
             .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<MilitaryUnits>()
-            .HasOne(p => p.unitType)
+            .HasOne(p => p.UnitType)
             .WithMany()
             .HasForeignKey(p => p.UnitTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<MilitaryUnits>()
+            .HasOne(p => p.ParentUnit)
+            .WithMany(p => p.SubUnits)
+            .HasForeignKey(p => p.ParentUnitId)
             .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<PersonnelAssignments>()

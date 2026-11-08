@@ -21,10 +21,14 @@ Log.Logger = new LoggerConfiguration()
 // Add services to the container.
 
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<IPersonnelRepository, PersonnelRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IPersonnelService, PersonnelService>();
 builder.Services.AddScoped<IAuthHelper, AuthHelper>();
+builder.Services.AddScoped<IPersonnelHelper, PersonnelHelper>();
+
 
 builder.Services.AddControllersWithViews();
 builder.Host.UseSerilog();
@@ -36,10 +40,17 @@ builder.Services.AddDbContextPool<LibraryDbContext>(options => options.UseMySql(
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
     {
-        Title = "Military Service API",
-        Version = "v1"
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Description = "JWT Authorization header using the Bearer scheme."
+    });
+    c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        [new OpenApiSecuritySchemeReference("bearer", document)] = []
     });
 });
 

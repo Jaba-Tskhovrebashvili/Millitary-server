@@ -7,13 +7,15 @@ namespace MillitaryService.Repositories.Implementations
     {
         private readonly LibraryDbContext _context;
         public IAdminRepository AdminRepository { get; }
+        public IPersonnelRepository PersonnelRepository { get; }
         public UnitOfWork(
             LibraryDbContext context,
-            IAdminRepository adminRepository)
+            IAdminRepository adminRepository,
+            IPersonnelRepository personnelRepository)
         {
             this._context = context;
             this.AdminRepository = adminRepository;
-
+            this.PersonnelRepository = personnelRepository;
         }
 
         public async Task<int> SaveChangesAsync()

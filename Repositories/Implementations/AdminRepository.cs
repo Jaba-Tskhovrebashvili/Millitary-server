@@ -18,6 +18,11 @@ namespace MillitaryService.Repositories
             return await _context.Admin.FirstOrDefaultAsync(x => x.Email == email);
         }
 
+        public async Task<Admin?> GetByIdAsync(int id)
+        {
+            return await _context.Admin.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task AddAsync(Admin admin)
         {
             await _context.Admin.AddAsync(admin);
