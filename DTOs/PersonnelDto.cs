@@ -18,8 +18,6 @@ namespace MillitaryService.DTOs
 
         public Int64 RankId { get; set; }
 
-        public Ranks Rank { get; set; }
-
         public string PhoneNumber { get; set; }
 
         public DateTime EnlistmentDate { get; set; }

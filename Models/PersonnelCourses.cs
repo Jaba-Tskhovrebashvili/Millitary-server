@@ -16,7 +16,7 @@ namespace MillitaryService.Models
 
         public DateTime? CompletionDate { get; set; }
 
-        public string? Result { get; set; }
+        public CourseResult? Result { get; set; } = CourseResult.NotCompleted;
 
        
     }

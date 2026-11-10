@@ -5,8 +5,9 @@ namespace MillitaryService.Services.Interfaces
 {
     public interface IPersonnelService
     {
-        Task<bool> PersonnelRegister(PersonnelDto personnelDto);
         Task<Personnel> PersonnelProfile(int PersonnelId);
+        Task<bool> PersonnelRegister(PersonnelDto personnelDto);
         Task<bool> PersonnelUpdate(PersonnelDto personnelDto, int personnelId);
+        Task<bool> PersonnelRemove(int personnelId);
     }
 }

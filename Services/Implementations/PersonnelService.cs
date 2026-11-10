@@ -106,5 +106,25 @@ namespace MillitaryService.Services.Implementations
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<bool> PersonnelRemove(int personnelId)
+        {
+            try
+            {
+                var findPersonById = await this._unitOfWork.PersonnelRepository.GetByIdAsync(personnelId);
+                if (findPersonById == null)
+                {
+                    throw new Exception("დაფიქსირდა შეცდომა");
+                }
+
+                await this._unitOfWork.PersonnelRepository.DeleteAsync(personnelId);
+                await this._unitOfWork.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

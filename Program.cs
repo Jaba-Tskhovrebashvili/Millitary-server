@@ -22,10 +22,16 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IPersonnelRepository, PersonnelRepository>();
+builder.Services.AddScoped<IRankRepository, RankRepository>();
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<IMilitaryUnitsRepository, MilitaryUnitsRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPersonnelService, PersonnelService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<IRankService, RankService>();
+builder.Services.AddScoped<IMilitaryUnitsService, MilitaryUnitsService>();
 builder.Services.AddScoped<IAuthHelper, AuthHelper>();
 builder.Services.AddScoped<IPersonnelHelper, PersonnelHelper>();
 

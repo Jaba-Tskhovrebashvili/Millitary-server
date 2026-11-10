@@ -10,7 +10,7 @@ namespace MillitaryService.Models
 
         public string Description { get; set; }
 
-        public int DurationInDays { get; set; }
+        public int DurationInWeeks { get; set; }
 
         public bool IsActive { get; set; }
     }

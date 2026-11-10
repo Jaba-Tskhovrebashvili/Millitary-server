@@ -67,7 +67,7 @@ namespace MillitaryService.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("DurationInDays")
+                    b.Property<int>("DurationInWeeks")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
@@ -262,8 +262,8 @@ namespace MillitaryService.Migrations
                     b.Property<long>("PersonnelId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Result")
-                        .HasColumnType("longtext");
+                    b.Property<int?>("Result")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -354,7 +354,8 @@ namespace MillitaryService.Migrations
                 {
                     b.HasOne("MillitaryService.Models.MilitaryUnits", "ParentUnit")
                         .WithMany("SubUnits")
-                        .HasForeignKey("ParentUnitId");
+                        .HasForeignKey("ParentUnitId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("MillitaryService.Models.UnitTypes", "UnitType")
                         .WithMany()

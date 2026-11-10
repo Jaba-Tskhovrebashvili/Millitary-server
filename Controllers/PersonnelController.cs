@@ -61,8 +61,24 @@ namespace MillitaryService.Controllers
             try
             {
                 await _personnelService.PersonnelUpdate(personnel,personnelId);
-
                 return StatusCode(200, new { success = true, message = "პერსონალის მონაცემები წარმატებით შეიცვალა" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500, new { message = ex.Message, success = false });
+            }
+
+        }
+
+        [HttpDelete("DeletePerson/{personnelId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> PersonnelRemove(int personnelId)
+        {
+            try
+            {
+                await _personnelService.PersonnelRemove(personnelId);
+                return StatusCode(200, new { success = true, message = "პერსონალს შეუჩერდა სტატუსი" });
             }
             catch (Exception ex)
             {

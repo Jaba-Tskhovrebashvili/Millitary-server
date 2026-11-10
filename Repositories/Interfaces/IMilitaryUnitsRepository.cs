@@ -1,0 +1,11 @@
+﻿using Microsoft.EntityFrameworkCore;
+using MillitaryService.Data;
+using MillitaryService.Models;
+
+namespace MillitaryService.Repositories.Interfaces
+{
+    public interface IMilitaryUnitsRepository
+    {
+        Task<List<MilitaryUnits>> MilitaryUnitsSearch(string search, int page);
+    }
+}

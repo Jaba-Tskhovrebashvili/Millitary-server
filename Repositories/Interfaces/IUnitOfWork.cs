@@ -4,6 +4,9 @@
     {
         IAdminRepository AdminRepository { get; }
         IPersonnelRepository PersonnelRepository { get; }
+        IRankRepository RankRepository { get; }
+        ICourseRepository CourseRepository { get; }
+        IMilitaryUnitsRepository MilitaryUnitsRepository { get; }
 
         Task<int> SaveChangesAsync();
     }
