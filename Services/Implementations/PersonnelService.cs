@@ -18,6 +18,22 @@ namespace MillitaryService.Services.Implementations
             this._personnelHelper = personnelHelper;
         }
 
+        public async Task<GetPersonelsDto>GetPersonnels(string search, int page)
+        {
+            try
+            {
+                return await this._unitOfWork.PersonnelRepository.GetPersonnels(search,page);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+
+        }
+
+
         public async Task<Personnel> PersonnelProfile(int PersonnelId)
         {
             try

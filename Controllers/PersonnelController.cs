@@ -18,6 +18,23 @@ namespace MillitaryService.Controllers
             this._personnelService = personnelService;
         }
 
+        [HttpGet("GetPersonnels")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetPersonnels([FromQuery] string? search,int page)
+        {
+            try
+            {
+                var personnel = await _personnelService.GetPersonnels(search, page);
+                return StatusCode(200, new { success = true, personnel });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500, new { message = ex.Message, success = false });
+            }
+
+        }
+
         [HttpGet("GetPersonProfile")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PersonnelProfile([FromQuery] int PersonnelId)

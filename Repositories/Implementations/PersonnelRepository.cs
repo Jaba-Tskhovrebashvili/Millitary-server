@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MailKit.Search;
+using Microsoft.EntityFrameworkCore;
 using MillitaryService.Data;
+using MillitaryService.DTOs;
 using MillitaryService.Models;
 using MillitaryService.Repositories.Interfaces;
 
@@ -12,6 +14,46 @@ namespace MillitaryService.Repositories.Implementations
         public PersonnelRepository(LibraryDbContext context)
         {
             this._context = context;
+        }
+
+        public async Task<GetPersonelsDto> GetPersonnels(string search,int page)
+        {
+            int pageSize = 15;
+            try
+            {
+                var query = this._context.Personnel.Where(x =>
+                    string.IsNullOrEmpty(search) ||
+                    EF.Functions.Like(
+                    (x.Name + " " + x.Surname + " " + x.PersonalNumber).ToLower(), $"%{search.ToLower()}%"));
+                var count = await query.CountAsync();
+                var personnels = await query
+                    .OrderBy(x => x.RankId)
+                     .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(a => new Personnel
+                    {
+                        Id = a.Id,
+                        Name = a.Name,
+                        Surname = a.Surname,
+                        Email = a.Email,
+                        RankId = a.RankId,
+                        PersonalNumber = a.PersonalNumber,
+                        DateOfBirth = a.DateOfBirth,
+                        Rank = a.Rank,
+                        PhoneNumber = a.PhoneNumber,
+                        EnlistmentDate = a.DateOfBirth,
+                        IsActive = a.IsActive,
+                    }).ToListAsync();
+                int totalPages = (int)Math.Ceiling((double)count / pageSize);
+                return new GetPersonelsDto
+                {
+                    Personnels = personnels,
+                    totalPages = totalPages
+                };
+            }
+            catch (Exception ex) {
+              throw new Exception(ex.Message);
+            }
         }
 
         public async Task<bool> ExistsByEmailAsync(string email)
