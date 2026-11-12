@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MillitaryService.Data;
+using MillitaryService.DTOs;
 using MillitaryService.Models;
 using MillitaryService.Repositories.Interfaces;
 
@@ -13,7 +14,7 @@ namespace MillitaryService.Repositories.Implementations
             this._context = context;
         }
 
-        public async Task<List<MilitaryUnits>> MilitaryUnitsSearch(string search, int page)
+        public async Task<GetMilitaryUnitsDto> MilitaryUnitsSearch(string search, int page)
         {
             int pageSize = 15;
             try
@@ -39,7 +40,11 @@ namespace MillitaryService.Repositories.Implementations
                     })
                     .ToListAsync();
                 int totalPages = (int)Math.Ceiling((double)count / pageSize);
-                return militaryUnits;
+                return new GetMilitaryUnitsDto
+                {
+                    militaryUnits=militaryUnits,
+                    totalPages=totalPages
+                };
             }
             catch (Exception ex)
             {

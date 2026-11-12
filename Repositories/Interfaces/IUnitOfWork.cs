@@ -7,6 +7,7 @@
         IRankRepository RankRepository { get; }
         ICourseRepository CourseRepository { get; }
         IMilitaryUnitsRepository MilitaryUnitsRepository { get; }
+        IPersonnelAssignmentsRepository personnelAssignmentsRepository { get; }
 
         Task<int> SaveChangesAsync();
     }

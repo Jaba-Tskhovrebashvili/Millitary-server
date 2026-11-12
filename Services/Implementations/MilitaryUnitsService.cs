@@ -1,4 +1,5 @@
-﻿using MillitaryService.Models;
+﻿using MillitaryService.DTOs;
+using MillitaryService.Models;
 using MillitaryService.Repositories.Interfaces;
 using MillitaryService.Services.Interfaces;
 
@@ -12,7 +13,7 @@ namespace MillitaryService.Services.Implementations
             this._unitOfWork = unitOfWork;
         }
 
-        public async Task<List<MilitaryUnits>> GetMilitaryUnits(string search,int page)
+        public async Task<GetMilitaryUnitsDto> GetMilitaryUnits(string search,int page)
         {
             try
             {
