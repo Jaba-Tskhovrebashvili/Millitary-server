@@ -5,7 +5,8 @@ namespace MillitaryService.Repositories.Interfaces
 {
     public interface IPersonnelRepository
     {
-        Task<GetPersonelsDto> GetPersonnels(string search, int page);
+        Task<(List<Personnel> Items, int Count)> GetPersonnels(string search, int page, int pageSize);
+
         Task<bool> ExistsByEmailAsync(string email);
         Task<bool> ExistsByPersNumberAsync(string PersonalNumber);
         Task<Personnel?> GetByIdAsync(int id);

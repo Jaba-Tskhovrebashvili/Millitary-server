@@ -6,6 +6,7 @@ namespace MillitaryService.Repositories.Interfaces
     {
         Task AddAsync(PersonnelAssignments personnelAssignments);
         Task<PersonnelAssignments?> GetCurrentAssignmentAsync(Int64 personnelId);
+        Task<List<PersonnelAssignments>> GetPersonnelAssignments(int personnelId);
         void Update(PersonnelAssignments assignment);
     }
 }

@@ -26,6 +26,15 @@ namespace MillitaryService.Repositories.Implementations
                     x.IsCurrent==true);
         }
 
+        public async Task<List<PersonnelAssignments>> GetPersonnelAssignments(int personnelId)
+        {
+            return await _context.PersonnelAssignments.
+                Where(x=>x.PersonnelId==personnelId)
+                .Include(x=>x.militaryUnit)
+                .Include(x=>x.position)
+                .ToListAsync();
+        }
+
         public void Update(PersonnelAssignments assignment)
         {
             _context.PersonnelAssignments.Update(assignment);

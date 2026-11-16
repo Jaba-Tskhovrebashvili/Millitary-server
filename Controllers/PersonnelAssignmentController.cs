@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MillitaryService.DTOs;
+using MillitaryService.Models;
 using MillitaryService.Services.Interfaces;
 
 namespace MillitaryService.Controllers
@@ -18,11 +19,6 @@ namespace MillitaryService.Controllers
          this._personnelAssignmentsService = personnelAssignmentsService;
         }
 
-        [HttpGet("Test")]
-        public IActionResult Test()
-        {
-            return Ok("PersonnelAssignment works!");
-        }
 
         [HttpPost("AddPersonnelAssign")]
         [Authorize(Roles = "Admin")]
@@ -38,7 +34,38 @@ namespace MillitaryService.Controllers
                 _logger.LogError(ex.Message);
                 return StatusCode(500, new { message = ex.Message, success = false });
             }
+        }
 
+        [HttpGet("GetPersonnelAssign")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetPersonnelAssign([FromQuery] int personnelId)
+        {
+            try
+            {
+               var personnelAssaignments= await this._personnelAssignmentsService.GetPersonnelAssignments(personnelId);
+                return StatusCode(200, new { success = true, personnelAssaignments });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500, new { message = ex.Message, success = false });
+            }
+        }
+
+        [HttpPut("updatePersonnelAssign/{personnelAssaignId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdatePersonnelAssign([FromBody] PersonnelAssignmentsDto personnelAssignments,int personnelAssaignId)
+        {
+            try
+            {
+                await this._personnelAssignmentsService.UpdatePersonnelAssignments(personnelAssignments, personnelAssaignId);
+                return StatusCode(200, new { success = true, message = "წარმატებით შეიცვალაშ" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500, new { message = ex.Message, success = false });
+            }
         }
 
     }

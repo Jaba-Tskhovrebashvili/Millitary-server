@@ -7,6 +7,6 @@ namespace MillitaryService.Repositories.Interfaces
 {
     public interface IMilitaryUnitsRepository
     {
-        Task<GetMilitaryUnitsDto> MilitaryUnitsSearch(string search, int page);
+        Task<(List<MilitaryUnits> Items, int TotalCount)> SearchAsync(string? search, int page, int pageSize);
     }
 }

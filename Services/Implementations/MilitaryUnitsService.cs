@@ -15,16 +15,16 @@ namespace MillitaryService.Services.Implementations
 
         public async Task<GetMilitaryUnitsDto> GetMilitaryUnits(string search,int page)
         {
-            try
-            {
-                return await this._unitOfWork.MilitaryUnitsRepository.MilitaryUnitsSearch(search, page);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+                 int pageSize = 15;
 
+                var (items, count) = await _unitOfWork.MilitaryUnitsRepository
+                    .SearchAsync(search, page, pageSize);
 
+                return new GetMilitaryUnitsDto
+                {
+                    militaryUnits = items,
+                    totalPages = (int)Math.Ceiling(count / (double)pageSize)
+                };
         }
     }
 }

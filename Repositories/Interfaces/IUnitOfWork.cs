@@ -8,6 +8,8 @@
         ICourseRepository CourseRepository { get; }
         IMilitaryUnitsRepository MilitaryUnitsRepository { get; }
         IPersonnelAssignmentsRepository personnelAssignmentsRepository { get; }
+        IPositionsRepository positionsRepository { get; }
+        IPersonnelCoursesRepository personnelCoursesRepository { get; }
 
         Task<int> SaveChangesAsync();
     }

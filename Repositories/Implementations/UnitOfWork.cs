@@ -12,6 +12,8 @@ namespace MillitaryService.Repositories.Implementations
         public ICourseRepository CourseRepository { get; }
         public IMilitaryUnitsRepository MilitaryUnitsRepository { get; }
         public IPersonnelAssignmentsRepository personnelAssignmentsRepository { get; }
+        public IPositionsRepository positionsRepository { get; }
+        public IPersonnelCoursesRepository personnelCoursesRepository { get; }
         public UnitOfWork(
             LibraryDbContext context,
             IAdminRepository adminRepository,
@@ -19,7 +21,9 @@ namespace MillitaryService.Repositories.Implementations
             IRankRepository rankRepository,
             ICourseRepository courseRepository,
             IMilitaryUnitsRepository militaryUnitsRepository,
-            IPersonnelAssignmentsRepository personnelAssignmentsRepository)
+            IPersonnelAssignmentsRepository personnelAssignmentsRepository,
+            IPositionsRepository positionsRepository,
+            IPersonnelCoursesRepository personnelCoursesRepository)
         {
             this._context = context;
             this.AdminRepository = adminRepository;
@@ -28,6 +32,8 @@ namespace MillitaryService.Repositories.Implementations
             this.CourseRepository = courseRepository;
             this.MilitaryUnitsRepository = militaryUnitsRepository;
             this.personnelAssignmentsRepository = personnelAssignmentsRepository;
+            this.positionsRepository = positionsRepository;
+            this.personnelCoursesRepository = personnelCoursesRepository;
         }
 
         public async Task<int> SaveChangesAsync()

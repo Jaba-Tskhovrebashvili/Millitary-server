@@ -14,42 +14,24 @@ namespace MillitaryService.Repositories.Implementations
             this._context = context;
         }
 
-        public async Task<GetMilitaryUnitsDto> MilitaryUnitsSearch(string search, int page)
+        public async Task<(List<MilitaryUnits> Items, int TotalCount)> SearchAsync(
+            string? search, int page, int pageSize)
         {
-            int pageSize = 15;
-            try
-            {
-                var query = this._context.MilitaryUnits.Where(
-                    x => (string.IsNullOrEmpty(search) || EF.Functions.Like(x.Description, $"%{search.ToLower()}%")));
-                var count = await query.CountAsync();
-                var militaryUnits = await query
-                    .OrderBy(x=>x.Id)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Select(x => new MilitaryUnits
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        UnitTypeId = x.UnitTypeId,
-                        UnitType = x.UnitType,
-                        ParentUnitId = x.ParentUnitId,
-                        ParentUnit = null,
-                        Description = x.Description,
-                        SubUnits = null,
-                        IsActive = x.IsActive
-                    })
-                    .ToListAsync();
-                int totalPages = (int)Math.Ceiling((double)count / pageSize);
-                return new GetMilitaryUnitsDto
-                {
-                    militaryUnits=militaryUnits,
-                    totalPages=totalPages
-                };
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            var query = _context.MilitaryUnits.AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(search))
+                query = query.Where(x => EF.Functions.Like(x.Description, $"%{search.Trim()}%"));
+
+            var count = await query.CountAsync();
+
+            var items = await query
+                .Include(x => x.UnitType)
+                .OrderBy(x => x.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, count);
         }
     }
 }

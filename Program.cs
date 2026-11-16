@@ -3,13 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using MillitaryService.Data;
-using MillitaryService.Helpers.Implementations;
-using MillitaryService.Helpers.Interfaces;
-using MillitaryService.Repositories;
-using MillitaryService.Repositories.Implementations;
-using MillitaryService.Repositories.Interfaces;
-using MillitaryService.Services.Implementations;
-using MillitaryService.Services.Interfaces;
+using MillitaryService.Extensions;
 using Serilog;
 using System.Text;
 
@@ -20,22 +14,8 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 // Add services to the container.
 
-builder.Services.AddScoped<IAdminRepository, AdminRepository>();
-builder.Services.AddScoped<IPersonnelRepository, PersonnelRepository>();
-builder.Services.AddScoped<IRankRepository, RankRepository>();
-builder.Services.AddScoped<ICourseRepository, CourseRepository>();
-builder.Services.AddScoped<IMilitaryUnitsRepository, MilitaryUnitsRepository>();
-builder.Services.AddScoped<IPersonnelAssignmentsRepository, PersonnelAssignmentsRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IAdminService, AdminService>();
-builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<IPersonnelService, PersonnelService>();
-builder.Services.AddScoped<ICourseService, CourseService>();
-builder.Services.AddScoped<IRankService, RankService>();
-builder.Services.AddScoped<IMilitaryUnitsService, MilitaryUnitsService>();
-builder.Services.AddScoped<IPersonnelAssignmentsService, PersonnelAssignmentsService>();
-builder.Services.AddScoped<IAuthHelper, AuthHelper>();
-builder.Services.AddScoped<IPersonnelHelper, PersonnelHelper>();
+builder.Services.AddInfrastructure();
+builder.Services.AddApplication();
 
 
 builder.Services.AddControllersWithViews();

@@ -48,5 +48,27 @@ namespace MillitaryService.Services.Implementations
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<List<PersonnelAssignments>> GetPersonnelAssignments(int personnelId)
+        {
+            return await this._unitOfWork.personnelAssignmentsRepository.GetPersonnelAssignments(personnelId);
+        }
+
+        public async Task UpdatePersonnelAssignments(PersonnelAssignmentsDto personnelAssaign,int personnelAssaignId)
+        {
+            var personelAssaign = new PersonnelAssignments {
+             Id= personnelAssaignId,
+             PersonnelId= personnelAssaign.PersonnelId,
+             MilitaryUnitId=personnelAssaign.MilitaryUnitId,
+             PositionId = personnelAssaign.PositionId,
+             StartDate = personnelAssaign.StartDate,
+             EndDate = personnelAssaign.EndDate,
+             IsCurrent = personnelAssaign.IsCurrent
+            };
+            this._unitOfWork.personnelAssignmentsRepository.Update(personelAssaign);
+            await this._unitOfWork.SaveChangesAsync();
+        }
+
+
     }
 }

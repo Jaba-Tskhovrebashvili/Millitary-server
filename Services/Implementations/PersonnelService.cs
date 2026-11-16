@@ -18,19 +18,17 @@ namespace MillitaryService.Services.Implementations
             this._personnelHelper = personnelHelper;
         }
 
-        public async Task<GetPersonelsDto>GetPersonnels(string search, int page)
+        public async Task<GetPersonelsDto>GetPersonnels(string? search, int page)
         {
-            try
-            {
-                return await this._unitOfWork.PersonnelRepository.GetPersonnels(search,page);
+                int pageSize = 15;
 
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
-
+                var (Items, Count) = await _unitOfWork.PersonnelRepository
+                    .GetPersonnels(search, page, pageSize);
+                return new GetPersonelsDto
+                {
+                    Personnels = Items,
+                    totalPages = (int)Math.Ceiling(Count / (double)pageSize)
+                };
         }
 
 
