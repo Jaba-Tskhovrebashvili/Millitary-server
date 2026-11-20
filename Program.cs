@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using MillitaryService.Data;
+using MillitaryService.Exceptions;
 using MillitaryService.Extensions;
 using Serilog;
 using System.Text;
@@ -62,7 +63,8 @@ builder.Services.AddAuthentication(x =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 
 var app = builder.Build();
@@ -90,7 +92,7 @@ if (app.Environment.IsDevelopment())
 // Configure the HTTP request pipeline.
 
 
-
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

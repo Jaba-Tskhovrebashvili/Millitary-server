@@ -23,33 +23,17 @@ namespace MillitaryService.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddPersonnelCourse([FromBody] PersonnelCoursesDto personnelCoursesDto)
         {
-
-            try
-            {
-                await this._personnelCoursesService.AddAsync(personnelCoursesDto);
-               return StatusCode(200, new { success = true, message = "წარმატებით დაემატა" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error while adding personnel course");
-                return StatusCode(500, new { success = false, message = "სერვერის შეცდომა" });
-            }
+            await this._personnelCoursesService.AddAsync(personnelCoursesDto);
+            return StatusCode(200, new { success = true, message = "წარმატებით დაემატა" });
+            
         }
 
         [HttpGet("GetPersonnelCourses")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetPersonnelCourses([FromQuery] int personnelId)
         {
-            try
-            {
                 var personnelCourses = await this._personnelCoursesService.GetPersonnelCourses(personnelId);
                 return Ok(new { success = true, personnelCourses });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error while getting courses for personnel {PersonnelId}", personnelId);
-                return StatusCode(500, new { success = false, message = "სერვერის შეცდომა" });
-            }
         }
 
         [HttpPut("UpdatePersonnelCourse")]
@@ -57,16 +41,10 @@ namespace MillitaryService.Controllers
         public async Task<IActionResult> UpdatePersonnelCourse([FromBody] PersonnelCourses personnelCourses)
         {
 
-            try
-            {
-                await this._personnelCoursesService.UpdateAsync(personnelCourses);
+          await this._personnelCoursesService.UpdateAsync(personnelCourses);
 
-                return StatusCode(200, new { success = true, message = "წარმატებით შეიცვალა" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = "სერვერის შეცდომა" });
-            }
+          return StatusCode(200, new { success = true, message = "წარმატებით შეიცვალა" });
+
         }
     }
 }

@@ -15,9 +15,6 @@ namespace MillitaryService.Services.Implementations
 
         public async Task AddAsync(PersonnelCoursesDto newPersonnelCourses)
         {
-            try
-            {
-
              var createPersonnelCourses = new PersonnelCourses
              {
               PersonnelId=newPersonnelCourses.PersonnelId,
@@ -30,40 +27,21 @@ namespace MillitaryService.Services.Implementations
                 await _unitOfWork.personnelCoursesRepository.AddAsync(createPersonnelCourses);
 
                 await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+
         }
 
         public async Task<List<PersonnelCourses>> GetPersonnelCourses(int personnelId)
         {
-            try
-            {
                 var personnelCourses = await _unitOfWork.personnelCoursesRepository.GetPersonnelCourses(personnelId);
-
                 return personnelCourses;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
         }
 
         public async Task UpdateAsync(PersonnelCourses PersonnelCourses)
         {
-            try
-            {
 
                 _unitOfWork.personnelCoursesRepository.UpdateAsync(PersonnelCourses);
 
                 await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
         }
     }
 }

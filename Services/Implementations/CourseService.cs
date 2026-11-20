@@ -14,16 +14,7 @@ namespace MillitaryService.Services.Implementations
 
         public async Task<List<Courses>> GetCourses(string search)
         {
-            try
-            {
-                return await this._unitOfWork.CourseRepository.CoursesBySearch(search);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
-
+          return await this._unitOfWork.CourseRepository.CoursesBySearch(search); 
         }
     }
 }

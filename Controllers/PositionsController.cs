@@ -20,16 +20,10 @@ namespace MillitaryService.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetPositions([FromQuery] string? search)
         {
-            try
-            {
-                var positions = await this._positionsService.GetPositions(search);
-                return StatusCode(200, new { success = true, positions });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode(500, new { message = ex.Message, success = false });
-            }
+
+          var positions = await this._positionsService.GetPositions(search);
+          return StatusCode(200, new { success = true, positions });
+
 
         }
     }

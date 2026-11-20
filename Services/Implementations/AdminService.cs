@@ -24,66 +24,56 @@ namespace MillitaryService.Services.Implementations
         public async Task<bool> VerifyEmailAsync(AdminDto admin)
         {
             if (!IsValidEmail(admin.Email))
-                throw new ArgumentException("მეილი არავალიდურია");
+                throw new BadRequestException("მეილი არავალიდურია");
 
-            var exists = await _unitOfWork.AdminRepository
-                .ExistsByEmailAsync(admin.Email);
+            if (string.IsNullOrWhiteSpace(admin.Name) || admin.Name.Trim().Length < 3)
+                throw new BadRequestException("გთხოვთ შეავსოთ სახელის ველი");
+
+            if (string.IsNullOrWhiteSpace(admin.Surname) || admin.Surname.Trim().Length < 3)
+                throw new BadRequestException("გთხოვთ შეავსოთ გვარის ველი");
+
+            var exists = await _unitOfWork.AdminRepository.ExistsByEmailAsync(admin.Email);
 
             if (exists)
-                throw new InvalidOperationException(
-                    "მსგავსი მეილით ექაუნთი უკვე არსებობს");
-
-            if (string.IsNullOrWhiteSpace(admin.Name) ||
-                admin.Name.Trim().Length < 3)
-                throw new ArgumentException(
-                    "გთხოვთ შეავსოთ სახელის ველი");
-
-            if (string.IsNullOrWhiteSpace(admin.Surname) ||
-                admin.Surname.Trim().Length < 3)
-                throw new ArgumentException(
-                    "გთხოვთ შეავსოთ გვარის ველი");
+                throw new ConflictException("მსგავსი მეილით ექაუნთი უკვე არსებობს");
 
             var token = await _authHelper.GenerateTokenRegister(admin);
 
-            await _emailService.SendEmailOtp(
-                admin.Email,
-                token,
-                admin.Name);
+            await _emailService.SendEmailOtp(admin.Email, token, admin.Name);
 
             return true;
         }
 
         public bool IsValidEmail(string email)
         {
-            try
-            {
-                return new System.Net.Mail.MailAddress(email).Address == email;
-            }
-            catch
-            {
-                return false;
-            }
+            return !string.IsNullOrWhiteSpace(email)
+                && System.Net.Mail.MailAddress.TryCreate(email, out var addr)
+                && addr.Address == email.Trim();
         }
 
        public async Task<bool> AdminRegister(PasswordDto passwordDto, string token)
         {
-            try
-            {
 
                 if (passwordDto.Password != passwordDto.ConfirmPassword)
                 {
-                    throw new ArgumentException("გაიმეორეთ პაროლი სწორად!");
+                    throw new BadRequestException("გაიმეორეთ პაროლი სწორად!");
                 }
                 var regexPattern = @"^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?""':;{}|<>]).{8,16}$";
 
                 if (!Regex.IsMatch(passwordDto.Password, regexPattern))
                 {
-                    throw new ArgumentException("პაროლი არავალიდურია");
+                    throw new BadRequestException("პაროლი არავალიდურია");
                 }
 
                 string passwordHash = BCrypt.Net.BCrypt.HashPassword(passwordDto.Password);
                 var verifyToken = await this._authHelper.VerifyJWTToken(token);
-                var admin = new Admin
+
+
+            var exists = await _unitOfWork.AdminRepository.ExistsByEmailAsync(verifyToken.Email);
+            if (exists)
+                throw new ConflictException("მსგავსი მეილით ექაუნთი უკვე არსებობს");
+
+            var admin = new Admin
                 {
                     Name = verifyToken.Name,
                     Surname = verifyToken.Surname,
@@ -96,17 +86,11 @@ namespace MillitaryService.Services.Implementations
                 await this._unitOfWork.SaveChangesAsync();
 
                 return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
         }
 
         public async Task<Admin> GetProfile(int id)
         {
-            try
-            {
+
                 var findAdmin = await this._unitOfWork.AdminRepository.GetByIdAsync(id);
                 var admin = new Admin
                 {
@@ -116,31 +100,23 @@ namespace MillitaryService.Services.Implementations
                     Email = findAdmin.Email,
                 };
                 return admin;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-
-            }   
-        
         }
 
         public async Task<AdminSignInResponseDto> AdminSignIn(AdminSignInDto adminSignin)
         {
-            try
-            {
+
                 var findAdmin = await this._unitOfWork.AdminRepository.GetByEmailAsync(adminSignin.Email);
              
 
                 if (findAdmin == null)
                 {
-                    throw new Exception("მოცემული მეილი რეგისტრირებული არ არის");
+                    throw new BadRequestException("მოცემული მეილი რეგისტრირებული არ არის");
                 }
 
                 var verified = BCrypt.Net.BCrypt.Verify(adminSignin.Password, findAdmin.Password);
                 if (!verified)
                 {
-                    throw new Exception("პაროლი არასწორია");
+                    throw new BadRequestException("პაროლი არასწორია");
                 }
                 var token = await this._authHelper.GenerateAdminToken((int)findAdmin.Id);
                 var admin = new Admin
@@ -151,12 +127,6 @@ namespace MillitaryService.Services.Implementations
                     Email = findAdmin.Email,
                 };
                 return new AdminSignInResponseDto { Admin=admin,Token=token };
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-
-            }
         }
     }
 }

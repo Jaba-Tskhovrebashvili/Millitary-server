@@ -22,17 +22,8 @@ namespace MillitaryService.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetilitaryUnits([FromQuery] string? search,int page)
         {
-            try
-            {
-                var militaryUnits = await this._militaryUnitsService.GetMilitaryUnits(search,page);
-                return StatusCode(200, new { success = true, militaryUnits });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode(500, new { message = ex.Message, success = false });
-            }
-
+          var militaryUnits = await this._militaryUnitsService.GetMilitaryUnits(search,page);
+          return StatusCode(200, new { success = true, militaryUnits });
         }
     }
 }

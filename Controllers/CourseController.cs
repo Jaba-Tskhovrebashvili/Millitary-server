@@ -20,17 +20,8 @@ namespace MillitaryService.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetCourses([FromQuery] string? search)
         {
-            try
-            {
                 var ranks = await this._courseService.GetCourses(search);
                 return StatusCode(200, new { success = true, ranks });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode(500, new { message = ex.Message, success = false });
-            }
-
         }
     }
 }

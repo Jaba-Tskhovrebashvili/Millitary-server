@@ -24,48 +24,28 @@ namespace MillitaryService.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddPersonnelAssign([FromBody] PersonnelAssignmentsDto personnelAssignmentsDto)
         {
-            try
-            {
-                await this._personnelAssignmentsService.AddAssignmentAsync(personnelAssignmentsDto);
-                return StatusCode(200, new { success = true, message="აქტიურად დაემატა" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode(500, new { message = ex.Message, success = false });
-            }
+            await this._personnelAssignmentsService.AddAssignmentAsync(personnelAssignmentsDto);
+            return StatusCode(200, new { success = true, message="აქტიურად დაემატა" });
+            
+    
         }
 
         [HttpGet("GetPersonnelAssign")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetPersonnelAssign([FromQuery] int personnelId)
         {
-            try
-            {
                var personnelAssaignments= await this._personnelAssignmentsService.GetPersonnelAssignments(personnelId);
                 return StatusCode(200, new { success = true, personnelAssaignments });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode(500, new { message = ex.Message, success = false });
-            }
         }
 
         [HttpPut("updatePersonnelAssign/{personnelAssaignId}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdatePersonnelAssign([FromBody] PersonnelAssignmentsDto personnelAssignments,int personnelAssaignId)
         {
-            try
-            {
-                await this._personnelAssignmentsService.UpdatePersonnelAssignments(personnelAssignments, personnelAssaignId);
-                return StatusCode(200, new { success = true, message = "წარმატებით შეიცვალაშ" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode(500, new { message = ex.Message, success = false });
-            }
+
+          await this._personnelAssignmentsService.UpdatePersonnelAssignments(personnelAssignments, personnelAssaignId);
+          return StatusCode(200, new { success = true, message = "წარმატებით შეიცვალაშ" });
+
         }
 
     }
