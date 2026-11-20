@@ -21,32 +21,30 @@ namespace MillitaryService.Helpers.Implementations
         {
             DateTime today = DateTime.Today;
 
-            try
-            {
 
-                if (!IsValidEmail(personnel.Email))
+                if (!IsValidEmail(personnel.Email)) 
                 {
-                    throw new Exception("მეილი არავალიდურია");
+                    throw new BadRequestException("მეილი არავალიდურია");
                 }
 
                 if (!string.IsNullOrWhiteSpace(personnel.Name) && (personnel.Name.Length < 2 || personnel.Name.Length > 50))
                 {
-                    throw new Exception("სახელი უნდა შეიცავდეს 2-დან 50 სიმბოლომდე");
+                    throw new BadRequestException("სახელი უნდა შეიცავდეს 2-დან 50 სიმბოლომდე");
                 }
 
                 if (!string.IsNullOrWhiteSpace(personnel.Surname) && (personnel.Surname.Length < 2 || personnel.Surname.Length > 50))
                 {
-                    throw new Exception("გვარი უნდა შეიცავდეს 2-დან 50 სიმბოლომდე");
+                    throw new BadRequestException("გვარი უნდა შეიცავდეს 2-დან 50 სიმბოლომდე");
                 }
 
                 if (personnel.PersonalNumber.Length != 11)
                 {
-                    throw new Exception("პირადი ნომერი უნდა შეადგენდეს 11 სიმბოლოს!");
+                    throw new BadRequestException("პირადი ნომერი უნდა შეადგენდეს 11 სიმბოლოს!");
                 }
 
                 if (personnel.DateOfBirth == default)
                 {
-                    throw new Exception("დაბადების თარიღი აუცილებელია!");
+                    throw new BadRequestException("დაბადების თარიღი აუცილებელია!");
                 }
 
                 int age = today.Year - personnel.DateOfBirth.Year;
@@ -57,29 +55,25 @@ namespace MillitaryService.Helpers.Implementations
 
                 if (age < 18)
                 {
-                    throw new Exception("პერსონალი უნდა იყოს სრულწლოვანი");
+                    throw new BadRequestException("პერსონალი უნდა იყოს სრულწლოვანი");
                 }
 
                 if (personnel.RankId <= 0)
                 {
-                    throw new Exception("რანგის არჩევა აუცილებელია!");
+                    throw new BadRequestException("რანგის არჩევა აუცილებელია!");
                 }
                 if (!string.IsNullOrWhiteSpace(personnel.PhoneNumber) &&
                     (personnel.PhoneNumber.Length < 4 || personnel.PhoneNumber.Length > 50))
                 {
-                    throw new Exception("ტელეფონის ნომერი უნდა შეიცავდეს 4-დან 50 სიმბოლომდე!");
+                    throw new BadRequestException("ტელეფონის ნომერი უნდა შეიცავდეს 4-დან 50 სიმბოლომდე!");
                 }
                 if (personnel.EnlistmentDate == default)
                 {
-                    throw new Exception("გაწვევის თარიღი აუცილებელია!");
-
+                    throw new BadRequestException("გაწვევის თარიღი აუცილებელია!");
                 }
 
                 return personnel;
-            }
-            catch (Exception ex) {
-                throw new Exception(ex.Message);
-            }
+
         }
     }
 }

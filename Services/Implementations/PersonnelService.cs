@@ -18,54 +18,43 @@ namespace MillitaryService.Services.Implementations
             this._personnelHelper = personnelHelper;
         }
 
-        public async Task<GetPersonelsDto>GetPersonnels(string search, int page)
+        public async Task<GetPersonelsDto>GetPersonnels(string? search, int page)
         {
-            try
-            {
-                return await this._unitOfWork.PersonnelRepository.GetPersonnels(search,page);
+                int pageSize = 15;
 
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
-
+                var (Items, Count) = await _unitOfWork.PersonnelRepository
+                    .GetPersonnels(search, page, pageSize);
+                return new GetPersonelsDto
+                {
+                    Personnels = Items,
+                    totalPages = (int)Math.Ceiling(Count / (double)pageSize)
+                };
         }
 
 
         public async Task<Personnel> PersonnelProfile(int PersonnelId)
         {
-            try
-            {
-             return await this._unitOfWork.PersonnelRepository.GetByIdAsync(PersonnelId);
-             
-            }
-            catch (Exception ex) {
-                throw new Exception(ex.Message);
-            }
-
-
+ 
+         return await this._unitOfWork.PersonnelRepository.GetByIdAsync(PersonnelId);
+            
         }
 
 
         public async Task<bool> PersonnelRegister(PersonnelDto personnelDto)
         {
-            try
-            {
                 var personelHelper = await this._personnelHelper.PersonnelValidate(personnelDto);
 
                 var findPersonByEmail= await this._unitOfWork.PersonnelRepository.ExistsByEmailAsync(personelHelper.Email);
                 if (findPersonByEmail)
                 {
-                    throw new Exception("მსგავსი მეილით ექაუნთი უკვე არსებობს");
+                    throw new ConflictException("მსგავსი მეილით ექაუნთი უკვე არსებობს");
                 }
 
                 var findPersonByPersonNumber = await this._unitOfWork.PersonnelRepository.ExistsByPersNumberAsync(personelHelper.PersonalNumber);
 
                 if (findPersonByPersonNumber)
                 {
-                    throw new Exception("მსგავსი პირადი ნომრით ექაუნთი უკვე არსებობს");
+                    throw new ConflictException("მსგავსი პირადი ნომრით ექაუნთი უკვე არსებობს");
                 }
 
                 var personnel = new Personnel {
@@ -84,20 +73,15 @@ namespace MillitaryService.Services.Implementations
                 await this._unitOfWork.SaveChangesAsync();
                 return true;
 
-            }
-            catch (Exception ex) {
-                throw new Exception(ex.Message);
-            }
         }
 
         public async Task<bool> PersonnelUpdate(PersonnelDto personnelDto, int personnelId)
         {
-            try {
                 var personelHelper = await this._personnelHelper.PersonnelValidate(personnelDto);
                 var findPersonById = await this._unitOfWork.PersonnelRepository.GetByIdAsync(personnelId);
                 if (findPersonById==null)
                 {
-                    throw new Exception("დაფიქსირდა შეცდომა");
+                    throw new ConflictException("დაფიქსირდა შეცდომა");
                 }
 
                 var personnel = new Personnel
@@ -117,30 +101,20 @@ namespace MillitaryService.Services.Implementations
                 this._unitOfWork.PersonnelRepository.UpdateAsync(personnel);
                 await this._unitOfWork.SaveChangesAsync();
                 return true;
-            } catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+
         }
 
         public async Task<bool> PersonnelRemove(int personnelId)
         {
-            try
-            {
                 var findPersonById = await this._unitOfWork.PersonnelRepository.GetByIdAsync(personnelId);
                 if (findPersonById == null)
                 {
-                    throw new Exception("დაფიქსირდა შეცდომა");
+                    throw new ConflictException("დაფიქსირდა შეცდომა");
                 }
 
                 await this._unitOfWork.PersonnelRepository.DeleteAsync(personnelId);
                 await this._unitOfWork.SaveChangesAsync();
                 return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
         }
     }
 }

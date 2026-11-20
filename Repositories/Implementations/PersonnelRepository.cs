@@ -16,44 +16,26 @@ namespace MillitaryService.Repositories.Implementations
             this._context = context;
         }
 
-        public async Task<GetPersonelsDto> GetPersonnels(string search,int page)
+        public async Task<(List<Personnel> Items, int Count)> GetPersonnels(string search,int page, int pageSize)
         {
-            int pageSize = 15;
-            try
-            {
-                var query = this._context.Personnel.Where(x =>
-                    string.IsNullOrEmpty(search) ||
-                    EF.Functions.Like(
-                    (x.Name + " " + x.Surname + " " + x.PersonalNumber).ToLower(), $"%{search.ToLower()}%"));
+
+                var query = _context.Personnel.AsNoTracking();
+
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    var pattern = $"%{search.Trim().ToLower()}%";
+                    query = query.Where(x =>
+                        EF.Functions.Like((x.Name + " " + x.Surname + " " + x.PersonalNumber).ToLower(), pattern));
+                }
                 var count = await query.CountAsync();
-                var personnels = await query
+                var Items = await query
                     .OrderBy(x => x.RankId)
                      .Skip((page - 1) * pageSize)
                     .Take(pageSize)
-                    .Select(a => new Personnel
-                    {
-                        Id = a.Id,
-                        Name = a.Name,
-                        Surname = a.Surname,
-                        Email = a.Email,
-                        RankId = a.RankId,
-                        PersonalNumber = a.PersonalNumber,
-                        DateOfBirth = a.DateOfBirth,
-                        Rank = a.Rank,
-                        PhoneNumber = a.PhoneNumber,
-                        EnlistmentDate = a.DateOfBirth,
-                        IsActive = a.IsActive,
-                    }).ToListAsync();
-                int totalPages = (int)Math.Ceiling((double)count / pageSize);
-                return new GetPersonelsDto
-                {
-                    Personnels = personnels,
-                    totalPages = totalPages
-                };
-            }
-            catch (Exception ex) {
-              throw new Exception(ex.Message);
-            }
+                    .ToListAsync();
+
+                return (Items, count);
+
         }
 
         public async Task<bool> ExistsByEmailAsync(string email)

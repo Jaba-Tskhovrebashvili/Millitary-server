@@ -22,16 +22,8 @@ namespace MillitaryService.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetPersonnels([FromQuery] string? search,int page)
         {
-            try
-            {
                 var personnel = await _personnelService.GetPersonnels(search, page);
                 return StatusCode(200, new { success = true, personnel });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode(500, new { message = ex.Message, success = false });
-            }
 
         }
 
@@ -39,17 +31,8 @@ namespace MillitaryService.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PersonnelProfile([FromQuery] int PersonnelId)
         {
-            try
-            {
                 var personnel = await _personnelService.PersonnelProfile(PersonnelId);
                 return StatusCode(200, new { success = true, personnel });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode(500, new { message = ex.Message, success = false });
-            }
-
         }
 
 
@@ -57,17 +40,10 @@ namespace MillitaryService.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PersonnelRegister([FromBody] PersonnelDto personnel)
         {
-            try
-            {
                 await _personnelService.PersonnelRegister(personnel);
 
                 return StatusCode(200, new { success = true, message = "პერსონალი წარმატებით დაემატა" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode(500, new { message = ex.Message, success = false });
-            }
+
 
         }
 
@@ -75,16 +51,9 @@ namespace MillitaryService.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PersonnelUpdate([FromBody] PersonnelDto personnel, int personnelId)
         {
-            try
-            {
-                await _personnelService.PersonnelUpdate(personnel,personnelId);
-                return StatusCode(200, new { success = true, message = "პერსონალის მონაცემები წარმატებით შეიცვალა" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode(500, new { message = ex.Message, success = false });
-            }
+
+          await _personnelService.PersonnelUpdate(personnel,personnelId);
+          return StatusCode(200, new { success = true, message = "პერსონალის მონაცემები წარმატებით შეიცვალა" });
 
         }
 
@@ -92,17 +61,8 @@ namespace MillitaryService.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PersonnelRemove(int personnelId)
         {
-            try
-            {
-                await _personnelService.PersonnelRemove(personnelId);
-                return StatusCode(200, new { success = true, message = "პერსონალს შეუჩერდა სტატუსი" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode(500, new { message = ex.Message, success = false });
-            }
-
+         await _personnelService.PersonnelRemove(personnelId);
+         return StatusCode(200, new { success = true, message = "პერსონალს შეუჩერდა სტატუსი" });
         }
     }
 }

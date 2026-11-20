@@ -15,8 +15,6 @@ namespace MillitaryService.Services.Implementations
 
         public async Task AddAssignmentAsync(PersonnelAssignmentsDto newAssignment)
         {
-            try
-            {
                 var currentAssignment =
            await _unitOfWork.personnelAssignmentsRepository.GetCurrentAssignmentAsync(newAssignment.PersonnelId);
 
@@ -42,11 +40,29 @@ namespace MillitaryService.Services.Implementations
                 await _unitOfWork.personnelAssignmentsRepository.AddAsync(newPersonnelAssaign);
 
                 await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+
         }
+
+        public async Task<List<PersonnelAssignments>> GetPersonnelAssignments(int personnelId)
+        {
+            return await this._unitOfWork.personnelAssignmentsRepository.GetPersonnelAssignments(personnelId);
+        }
+
+        public async Task UpdatePersonnelAssignments(PersonnelAssignmentsDto personnelAssaign,int personnelAssaignId)
+        {
+            var personelAssaign = new PersonnelAssignments {
+             Id= personnelAssaignId,
+             PersonnelId= personnelAssaign.PersonnelId,
+             MilitaryUnitId=personnelAssaign.MilitaryUnitId,
+             PositionId = personnelAssaign.PositionId,
+             StartDate = personnelAssaign.StartDate,
+             EndDate = personnelAssaign.EndDate,
+             IsCurrent = personnelAssaign.IsCurrent
+            };
+            this._unitOfWork.personnelAssignmentsRepository.Update(personelAssaign);
+            await this._unitOfWork.SaveChangesAsync();
+        }
+
+
     }
 }

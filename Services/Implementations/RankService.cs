@@ -13,16 +13,7 @@ namespace MillitaryService.Services.Implementations
 
         public async Task<List<Ranks>> GetRanks(string search)
         {
-            try
-            {
-                return await this._unitOfWork.RankRepository.GetRunksBySearch(search);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
-
+          return await this._unitOfWork.RankRepository.GetRunksBySearch(search);
         }
     }
 }
