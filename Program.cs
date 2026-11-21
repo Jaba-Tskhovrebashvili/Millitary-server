@@ -53,8 +53,8 @@ builder.Services.AddAuthentication(x =>
     x.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidAudience = "admin",
+        ValidateAudience = true,
+        ValidAudience = "admin-access",
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])
          ),

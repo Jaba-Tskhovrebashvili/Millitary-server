@@ -19,21 +19,22 @@ namespace MillitaryService.Helpers.Implementations
         public async Task<string> GenerateTokenRegister(AdminDto admin)
         {
             var claims = new List<Claim> {
-         new Claim("Name", admin.Name),
-         new Claim("Surname", admin.Surname),
-         new Claim("Email",admin.Email)
-        };
+        new Claim("Name", admin.Name),
+        new Claim("Surname", admin.Surname),
+        new Claim("Email", admin.Email)
+    };
 
             var jwtToken = new JwtSecurityToken(
-               claims: claims,
-               notBefore: DateTime.UtcNow,
-               expires: DateTime.UtcNow.AddMinutes(5),
-               signingCredentials: new SigningCredentials(
-                   new SymmetricSecurityKey(
-                      Encoding.UTF8.GetBytes(this._configuration["JWT:Key"])
-                       ),
-                   SecurityAlgorithms.HmacSha256Signature)
-               );
+                audience: "admin-registration",          // ← add this
+                claims: claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(5),
+                signingCredentials: new SigningCredentials(
+                    new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(this._configuration["JWT:Key"])
+                    ),
+                    SecurityAlgorithms.HmacSha256Signature)
+            );
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
         }
 
@@ -50,8 +51,8 @@ namespace MillitaryService.Helpers.Implementations
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidAudience = "admin",
+                    ValidateAudience = true,                  // ← was false
+                    ValidAudience = "admin-registration",
                     ClockSkew = TimeSpan.Zero, // Set clockskew to zero
                     ValidateLifetime = true,
                 }, out SecurityToken validatedToken);
@@ -88,6 +89,7 @@ namespace MillitaryService.Helpers.Implementations
         };
 
             var jwtToken = new JwtSecurityToken(
+               audience: "admin-access",
                claims: claims,
                notBefore: DateTime.UtcNow,
                expires: DateTime.UtcNow.AddDays(20),

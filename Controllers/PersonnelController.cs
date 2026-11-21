@@ -29,9 +29,9 @@ namespace MillitaryService.Controllers
 
         [HttpGet("id:int")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PersonnelProfile(int PersonnelId)
+        public async Task<IActionResult> PersonnelProfile(int id)
         {
-                var personnel = await _personnelService.PersonnelProfile(PersonnelId);
+                var personnel = await _personnelService.PersonnelProfile(id);
                 return StatusCode(200, new { success = true, personnel });
         }
 
@@ -44,21 +44,21 @@ namespace MillitaryService.Controllers
          return StatusCode(200, new { success = true, message = "პერსონალი წარმატებით დაემატა" });
         }
 
-        [HttpPut("{personnelId:int}")]
+        [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PersonnelUpdate([FromBody] PersonnelDto personnel, int personnelId)
+        public async Task<IActionResult> PersonnelUpdate([FromBody] PersonnelDto personnel, int id)
         {
 
-          await _personnelService.PersonnelUpdate(personnel,personnelId);
+          await _personnelService.PersonnelUpdate(personnel, id);
           return StatusCode(200, new { success = true, message = "პერსონალის მონაცემები წარმატებით შეიცვალა" });
 
         }
 
-        [HttpDelete("{personnelId:int}")]
+        [HttpDelete("{id:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PersonnelRemove(int personnelId)
+        public async Task<IActionResult> PersonnelRemove(int id)
         {
-         await _personnelService.PersonnelRemove(personnelId);
+         await _personnelService.PersonnelRemove(id);
          return StatusCode(200, new { success = true, message = "პერსონალს შეუჩერდა სტატუსი" });
         }
     }
