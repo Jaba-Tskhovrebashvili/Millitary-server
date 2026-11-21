@@ -15,7 +15,11 @@ namespace MillitaryService.Services.Implementations
 
         public async Task AddAsync(PersonnelCoursesDto newPersonnelCourses)
         {
-             var createPersonnelCourses = new PersonnelCourses
+            var person = await _unitOfWork.PersonnelRepository.GetByIdAsync((int)newPersonnelCourses.PersonnelId);
+            if (person is null || !person.IsActive)
+                throw new NotFoundException("პერსონალი ვერ მოიძებნა");
+
+            var createPersonnelCourses = new PersonnelCourses
              {
               PersonnelId=newPersonnelCourses.PersonnelId,
               CourseId=newPersonnelCourses.CourseId,

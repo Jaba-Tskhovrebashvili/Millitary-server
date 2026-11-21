@@ -6,7 +6,7 @@ using MillitaryService.Services.Interfaces;
 
 namespace MillitaryService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/personnel/assignments")]
     [ApiController]
     public class PersonnelAssignmentController : Controller
     {
@@ -20,7 +20,7 @@ namespace MillitaryService.Controllers
         }
 
 
-        [HttpPost("AddPersonnelAssign")]
+        [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddPersonnelAssign([FromBody] PersonnelAssignmentsDto personnelAssignmentsDto)
         {
@@ -30,7 +30,7 @@ namespace MillitaryService.Controllers
     
         }
 
-        [HttpGet("GetPersonnelAssign")]
+        [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetPersonnelAssign([FromQuery] int personnelId)
         {
@@ -38,14 +38,12 @@ namespace MillitaryService.Controllers
                 return StatusCode(200, new { success = true, personnelAssaignments });
         }
 
-        [HttpPut("updatePersonnelAssign/{personnelAssaignId}")]
+        [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdatePersonnelAssign([FromBody] PersonnelAssignmentsDto personnelAssignments,int personnelAssaignId)
+        public async Task<IActionResult> UpdatePersonnelAssign([FromBody] PersonnelAssignmentsDto personnelAssignments,int id)
         {
-
-          await this._personnelAssignmentsService.UpdatePersonnelAssignments(personnelAssignments, personnelAssaignId);
+          await this._personnelAssignmentsService.UpdatePersonnelAssignments(personnelAssignments, id);
           return StatusCode(200, new { success = true, message = "წარმატებით შეიცვალაშ" });
-
         }
 
     }

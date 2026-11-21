@@ -4,7 +4,7 @@ using MillitaryService.Services.Interfaces;
 
 namespace MillitaryService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/courses")]
     [ApiController]
     public class CourseController : Controller
     {
@@ -16,7 +16,7 @@ namespace MillitaryService.Controllers
             this._courseService = courseService;
         }
 
-        [HttpGet("GetCourses")]
+        [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetCourses([FromQuery] string? search)
         {

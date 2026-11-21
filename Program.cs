@@ -54,6 +54,7 @@ builder.Services.AddAuthentication(x =>
     {
         ValidateIssuer = false,
         ValidateAudience = false,
+        ValidAudience = "admin",
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])
          ),

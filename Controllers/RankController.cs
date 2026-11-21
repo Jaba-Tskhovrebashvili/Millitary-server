@@ -4,7 +4,7 @@ using MillitaryService.Services.Interfaces;
 
 namespace MillitaryService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/ranks")]
     [ApiController]
     public class RankController : Controller
     {
@@ -15,9 +15,9 @@ namespace MillitaryService.Controllers
             this._logger= logger;
             this._rankService= rankService;
         }
-        [HttpGet("GetRanks")]
+        [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetRanks([FromQuery] string? search)
+        public async Task<IActionResult> GetAll([FromQuery] string? search)
         {
          var ranks = await this._rankService.GetRanks(search);
          return StatusCode(200, new { success = true, ranks });

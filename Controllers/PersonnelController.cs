@@ -6,7 +6,7 @@ using MillitaryService.Services.Interfaces;
 
 namespace MillitaryService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/personnel")]
     [ApiController]
     public class PersonnelController : Controller
     {
@@ -18,36 +18,33 @@ namespace MillitaryService.Controllers
             this._personnelService = personnelService;
         }
 
-        [HttpGet("GetPersonnels")]
+        [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetPersonnels([FromQuery] string? search,int page)
+        public async Task<IActionResult> GetAll([FromQuery] string? search,int page)
         {
                 var personnel = await _personnelService.GetPersonnels(search, page);
                 return StatusCode(200, new { success = true, personnel });
 
         }
 
-        [HttpGet("GetPersonProfile")]
+        [HttpGet("id:int")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PersonnelProfile([FromQuery] int PersonnelId)
+        public async Task<IActionResult> PersonnelProfile(int PersonnelId)
         {
                 var personnel = await _personnelService.PersonnelProfile(PersonnelId);
                 return StatusCode(200, new { success = true, personnel });
         }
 
 
-        [HttpPost("AddPerson")]
+        [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PersonnelRegister([FromBody] PersonnelDto personnel)
         {
-                await _personnelService.PersonnelRegister(personnel);
-
-                return StatusCode(200, new { success = true, message = "პერსონალი წარმატებით დაემატა" });
-
-
+         await _personnelService.PersonnelRegister(personnel);
+         return StatusCode(200, new { success = true, message = "პერსონალი წარმატებით დაემატა" });
         }
 
-        [HttpPut("UpdatePerson/{personnelId}")]
+        [HttpPut("{personnelId:int}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PersonnelUpdate([FromBody] PersonnelDto personnel, int personnelId)
         {
@@ -57,7 +54,7 @@ namespace MillitaryService.Controllers
 
         }
 
-        [HttpDelete("DeletePerson/{personnelId}")]
+        [HttpDelete("{personnelId:int}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PersonnelRemove(int personnelId)
         {

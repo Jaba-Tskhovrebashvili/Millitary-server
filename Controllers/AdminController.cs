@@ -21,7 +21,7 @@ namespace MillitaryService.Controllers
         }
     
 
-        [HttpGet("myProfile/{adminId}")]
+        [HttpGet("my-profile/{adminId}")]
         [Authorize]
         async public Task<IActionResult> GetProfile(int adminId)
         {
@@ -30,7 +30,7 @@ namespace MillitaryService.Controllers
         
         }
 
-        [HttpPost("emailVerify")]
+        [HttpPost("verify-email")]
         public async Task<IActionResult> VerifyEmail([FromBody] AdminDto admin)
         {
  
@@ -39,16 +39,16 @@ namespace MillitaryService.Controllers
                 return StatusCode(200, new { success = true, message = "შეამოწმეთ მეილი" });
         }
 
-        [HttpPost("signUp")]
-        async public Task<IActionResult> AdminRegister([FromBody]PasswordDto password, [FromQuery] string token)
+        [HttpPost("sign-up")]
+        async public Task<IActionResult> SignUp([FromBody]PasswordDto password, [FromQuery] string token)
         {
                 await this._adminService.AdminRegister(password, token);
                 return StatusCode(200, new { success = true, message = "რეგისტრაცია წარმატებულია" });
         }
 
 
-        [HttpPost("signIn")]
-        async public Task<IActionResult> AdminSignIn(AdminSignInDto adminSignIn)
+        [HttpPost("sign-in")]
+        async public Task<IActionResult> SignIn(AdminSignInDto adminSignIn)
         {
                 var admin = await this._adminService.AdminSignIn(adminSignIn);
               return StatusCode(200, new { success = true, admin=admin.Admin,token=admin.Token });

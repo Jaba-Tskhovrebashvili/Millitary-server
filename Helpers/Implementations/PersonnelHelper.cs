@@ -22,22 +22,22 @@ namespace MillitaryService.Helpers.Implementations
             DateTime today = DateTime.Today;
 
 
-                if (!IsValidEmail(personnel.Email)) 
+                if (string.IsNullOrWhiteSpace(personnel.Email) || !IsValidEmail(personnel.Email)) 
                 {
                     throw new BadRequestException("მეილი არავალიდურია");
                 }
 
-                if (!string.IsNullOrWhiteSpace(personnel.Name) && (personnel.Name.Length < 2 || personnel.Name.Length > 50))
+                if (string.IsNullOrWhiteSpace(personnel.Name) || personnel.Name.Trim().Length is < 2 or > 50)
                 {
                     throw new BadRequestException("სახელი უნდა შეიცავდეს 2-დან 50 სიმბოლომდე");
                 }
 
-                if (!string.IsNullOrWhiteSpace(personnel.Surname) && (personnel.Surname.Length < 2 || personnel.Surname.Length > 50))
+                if (string.IsNullOrWhiteSpace(personnel.Surname) || personnel.Surname.Trim().Length is < 2 or > 50)
                 {
                     throw new BadRequestException("გვარი უნდა შეიცავდეს 2-დან 50 სიმბოლომდე");
                 }
 
-                if (personnel.PersonalNumber.Length != 11)
+                if (personnel.PersonalNumber is null || personnel.PersonalNumber.Length != 11 || !personnel.PersonalNumber.All(char.IsDigit))
                 {
                     throw new BadRequestException("პირადი ნომერი უნდა შეადგენდეს 11 სიმბოლოს!");
                 }
@@ -71,8 +71,13 @@ namespace MillitaryService.Helpers.Implementations
                 {
                     throw new BadRequestException("გაწვევის თარიღი აუცილებელია!");
                 }
+                if (personnel.EnlistmentDate > DateTime.Today || personnel.EnlistmentDate < personnel.DateOfBirth)
+                {
+                    throw new BadRequestException("გაწვევის თარიღი არასწორია!");
+                }
+                
 
-                return personnel;
+            return personnel;
 
         }
     }

@@ -4,8 +4,9 @@ namespace MillitaryService.Repositories.Interfaces
 {
     public interface IPersonnelAssignmentsRepository
     {
+        Task<PersonnelAssignments?> GetByIdAsync(long id);
         Task AddAsync(PersonnelAssignments personnelAssignments);
-        Task<PersonnelAssignments?> GetCurrentAssignmentAsync(Int64 personnelId);
+        Task<PersonnelAssignments?> GetCurrentAssignmentAsync(long personnelId);
         Task<List<PersonnelAssignments>> GetPersonnelAssignments(int personnelId);
         void Update(PersonnelAssignments assignment);
     }

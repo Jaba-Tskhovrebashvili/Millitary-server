@@ -13,12 +13,17 @@ namespace MillitaryService.Repositories.Implementations
             this._context=context;
         }
 
+        public async Task<PersonnelAssignments?> GetByIdAsync(long id)
+        {
+            return await _context.PersonnelAssignments.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task AddAsync(PersonnelAssignments personnelAssignments)
         {
             await _context.PersonnelAssignments.AddAsync(personnelAssignments);
         }
 
-        public async Task<PersonnelAssignments?> GetCurrentAssignmentAsync(Int64 personnelId)
+        public async Task<PersonnelAssignments?> GetCurrentAssignmentAsync(long personnelId)
         {
             return await _context.PersonnelAssignments
                 .FirstOrDefaultAsync(x =>
