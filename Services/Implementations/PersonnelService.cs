@@ -35,7 +35,8 @@ namespace MillitaryService.Services.Implementations
         public async Task<Personnel> PersonnelProfile(int PersonnelId)
         {
  
-         return await this._unitOfWork.PersonnelRepository.GetByIdAsync(PersonnelId);
+         return await this._unitOfWork.PersonnelRepository.GetByIdAsync(PersonnelId)
+                ?? throw new NotFoundException("პერსონალი ვერ მოიძებნა");
             
         }
 
@@ -81,7 +82,7 @@ namespace MillitaryService.Services.Implementations
                 var findPersonById = await this._unitOfWork.PersonnelRepository.GetByIdAsync(personnelId);
                 if (findPersonById==null)
                 {
-                    throw new ConflictException("დაფიქსირდა შეცდომა");
+                    throw new NotFoundException("დაფიქსირდა შეცდომა");
                 }
 
                 var personnel = new Personnel
@@ -106,11 +107,9 @@ namespace MillitaryService.Services.Implementations
 
         public async Task<bool> PersonnelRemove(int personnelId)
         {
-                var findPersonById = await this._unitOfWork.PersonnelRepository.GetByIdAsync(personnelId);
-                if (findPersonById == null)
-                {
-                    throw new ConflictException("დაფიქსირდა შეცდომა");
-                }
+                var personnel = await this._unitOfWork.PersonnelRepository.GetByIdAsync(personnelId)
+                   ?? throw new NotFoundException("პერსონალი ვერ მოიძებნა");
+
 
                 await this._unitOfWork.PersonnelRepository.DeleteAsync(personnelId);
                 await this._unitOfWork.SaveChangesAsync();

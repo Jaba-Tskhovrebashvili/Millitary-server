@@ -51,7 +51,9 @@ namespace MillitaryService.Helpers.Implementations
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    ClockSkew = TimeSpan.Zero // Set clockskew to zero
+                    ValidAudience = "admin",
+                    ClockSkew = TimeSpan.Zero, // Set clockskew to zero
+                    ValidateLifetime = true,
                 }, out SecurityToken validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
@@ -70,9 +72,9 @@ namespace MillitaryService.Helpers.Implementations
                 return obj;
 
             }
-            catch (Exception ex)
+            catch (SecurityTokenException)
             {
-                throw new Exception("ტოკენი არასწორია ან ვადა გასულია.");
+                throw new BadRequestException("ტოკენი არასწორია ან ვადა გასულია.");
 
             }
 

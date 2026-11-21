@@ -5,7 +5,7 @@ using MillitaryService.Services.Interfaces;
 
 namespace MillitaryService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/military-units")]
     [ApiController]
     public class MilitaryUnitController : Controller
     {
@@ -18,9 +18,9 @@ namespace MillitaryService.Controllers
             this._militaryUnitsService = militaryUnitsService;
         }
 
-        [HttpGet("GetMilitaryUnits")]
+        [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetilitaryUnits([FromQuery] string? search,int page)
+        public async Task<IActionResult> GetAll([FromQuery] string? search,int page)
         {
           var militaryUnits = await this._militaryUnitsService.GetMilitaryUnits(search,page);
           return StatusCode(200, new { success = true, militaryUnits });

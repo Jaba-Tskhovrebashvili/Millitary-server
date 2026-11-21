@@ -91,7 +91,8 @@ namespace MillitaryService.Services.Implementations
         public async Task<Admin> GetProfile(int id)
         {
 
-                var findAdmin = await this._unitOfWork.AdminRepository.GetByIdAsync(id);
+                var findAdmin = await this._unitOfWork.AdminRepository.GetByIdAsync(id)
+                ?? throw new NotFoundException("ადმინი ვერ მოიძებნა"); ;
                 var admin = new Admin
                 {
                     Id = findAdmin.Id,

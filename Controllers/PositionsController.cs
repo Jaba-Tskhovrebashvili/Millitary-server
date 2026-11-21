@@ -4,7 +4,7 @@ using MillitaryService.Services.Interfaces;
 
 namespace MillitaryService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/positions")]
     [ApiController]
     public class PositionsController : Controller
     {
@@ -16,9 +16,9 @@ namespace MillitaryService.Controllers
             this._positionsService = positionsService;
         }
 
-        [HttpGet("GetPositions")]
+        [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetPositions([FromQuery] string? search)
+        public async Task<IActionResult> GetAll([FromQuery] string? search)
         {
 
           var positions = await this._positionsService.GetPositions(search);

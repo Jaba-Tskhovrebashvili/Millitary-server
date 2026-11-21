@@ -5,7 +5,7 @@ using MillitaryService.Models;
 using MillitaryService.Services.Interfaces;
 namespace MillitaryService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/personnel/courses")]
     [ApiController]
     public class PersonnelCoursesController : Controller
     {
@@ -19,7 +19,7 @@ namespace MillitaryService.Controllers
             this._personnelCoursesService= personnelCoursesService;
         }
 
-        [HttpPost("AddPersonnelCourse")]
+        [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddPersonnelCourse([FromBody] PersonnelCoursesDto personnelCoursesDto)
         {
@@ -28,21 +28,19 @@ namespace MillitaryService.Controllers
             
         }
 
-        [HttpGet("GetPersonnelCourses")]
+        [HttpGet("{personnelId:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetPersonnelCourses([FromQuery] int personnelId)
+        public async Task<IActionResult> GetPersonnelCourses(int personnelId)
         {
                 var personnelCourses = await this._personnelCoursesService.GetPersonnelCourses(personnelId);
                 return Ok(new { success = true, personnelCourses });
         }
 
-        [HttpPut("UpdatePersonnelCourse")]
+        [HttpPut]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdatePersonnelCourse([FromBody] PersonnelCourses personnelCourses)
         {
-
           await this._personnelCoursesService.UpdateAsync(personnelCourses);
-
           return StatusCode(200, new { success = true, message = "წარმატებით შეიცვალა" });
 
         }
