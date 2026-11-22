@@ -5,5 +5,6 @@ namespace MillitaryService.DTOs
     {
         public List<MilitaryUnits> militaryUnits {  get; set; }
         public int totalPages { get; set; }
+        public int count {  get; set; }
     }
 }

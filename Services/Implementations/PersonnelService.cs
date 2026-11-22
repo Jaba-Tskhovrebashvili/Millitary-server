@@ -27,7 +27,8 @@ namespace MillitaryService.Services.Implementations
                 return new GetPersonelsDto
                 {
                     Personnels = Items,
-                    totalPages = (int)Math.Ceiling(Count / (double)pageSize)
+                    totalPages = (int)Math.Ceiling(Count / (double)pageSize),
+                    count= Count
                 };
         }
 
@@ -85,21 +86,17 @@ namespace MillitaryService.Services.Implementations
                     throw new NotFoundException("დაფიქსირდა შეცდომა");
                 }
 
-                var personnel = new Personnel
-                {
-                    Id=personnelId,
-                    Name = personelHelper.Name,
-                    Surname = personelHelper.Surname,
-                    Email = personelHelper.Email,
-                    PersonalNumber = personelHelper.PersonalNumber,
-                    DateOfBirth = personelHelper.DateOfBirth,
-                    RankId = personelHelper.RankId,
-                    PhoneNumber = personelHelper.PhoneNumber,
-                    EnlistmentDate = personelHelper.EnlistmentDate,
-                    IsActive = true
-                };
+            findPersonById.Name = personelHelper.Name;
+            findPersonById.Surname = personelHelper.Surname;
+            findPersonById.Email = personelHelper.Email;
+            findPersonById.PersonalNumber = personelHelper.PersonalNumber;
+            findPersonById.DateOfBirth = personelHelper.DateOfBirth;
+            findPersonById.RankId = personelHelper.RankId;
+            findPersonById.PhoneNumber = personelHelper.PhoneNumber;
+            findPersonById.EnlistmentDate = personelHelper.EnlistmentDate;
+            findPersonById.IsActive = true;
 
-                this._unitOfWork.PersonnelRepository.UpdateAsync(personnel);
+            this._unitOfWork.PersonnelRepository.UpdateAsync(findPersonById);
                 await this._unitOfWork.SaveChangesAsync();
                 return true;
 
