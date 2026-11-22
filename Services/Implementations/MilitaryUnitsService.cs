@@ -23,7 +23,8 @@ namespace MillitaryService.Services.Implementations
                 return new GetMilitaryUnitsDto
                 {
                     militaryUnits = items,
-                    totalPages = (int)Math.Ceiling(count / (double)pageSize)
+                    totalPages = (int)Math.Ceiling(count / (double)pageSize),
+                    count=count
                 };
         }
     }
