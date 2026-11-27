@@ -96,7 +96,7 @@ namespace MillitaryService.Services.Implementations
             findPersonById.EnlistmentDate = personelHelper.EnlistmentDate;
             findPersonById.IsActive = true;
 
-            this._unitOfWork.PersonnelRepository.UpdateAsync(findPersonById);
+            //this._unitOfWork.PersonnelRepository.UpdateAsync(findPersonById);
                 await this._unitOfWork.SaveChangesAsync();
                 return true;
 

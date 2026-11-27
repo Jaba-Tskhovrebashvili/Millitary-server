@@ -7,6 +7,6 @@ namespace MillitaryService.Services.Interfaces
     {
         Task AddAsync(PersonnelCoursesDto newPersonnelCourses);
         Task<List<PersonnelCourses>> GetPersonnelCourses(int personnelId);
-        Task UpdateAsync(PersonnelCourses PersonnelCourses);
+        Task UpdateAsync(PersonnelCoursesDto PersonnelCourses, int id);
     }
 }

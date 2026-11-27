@@ -40,10 +40,18 @@ namespace MillitaryService.Services.Implementations
                 return personnelCourses;
         }
 
-        public async Task UpdateAsync(PersonnelCourses PersonnelCourses)
+        public async Task UpdateAsync(PersonnelCoursesDto PersonnelCourses, int id)
         {
+            var persCourses = new PersonnelCourses {
+             Id = id,
+             PersonnelId= PersonnelCourses.PersonnelId,
+             CourseId= PersonnelCourses.CourseId,
+             EnrollmentDate= PersonnelCourses.EnrollmentDate,
+             CompletionDate = PersonnelCourses.CompletionDate,
+             Result = PersonnelCourses.Result
+            };
 
-                _unitOfWork.personnelCoursesRepository.UpdateAsync(PersonnelCourses);
+                _unitOfWork.personnelCoursesRepository.UpdateAsync(persCourses);
 
                 await _unitOfWork.SaveChangesAsync();
         }

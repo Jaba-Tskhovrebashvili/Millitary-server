@@ -36,11 +36,11 @@ namespace MillitaryService.Controllers
                 return Ok(new { success = true, personnelCourses });
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdatePersonnelCourse([FromBody] PersonnelCourses personnelCourses)
+        public async Task<IActionResult> UpdatePersonnelCourse([FromBody] PersonnelCoursesDto personnelCourses,int id)
         {
-          await this._personnelCoursesService.UpdateAsync(personnelCourses);
+          await this._personnelCoursesService.UpdateAsync(personnelCourses,id);
           return StatusCode(200, new { success = true, message = "წარმატებით შეიცვალა" });
 
         }

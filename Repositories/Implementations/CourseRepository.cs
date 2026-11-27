@@ -16,17 +16,15 @@ namespace MillitaryService.Repositories.Implementations
 
         public async Task<List<Courses>> CoursesBySearch(string search)
         {
-            try
-            {
                 var courses = await this._context.Courses
                     .Where(x => (string.IsNullOrEmpty(search) || EF.Functions.Like(x.Name, $"%{search}%")))
                     .ToListAsync();
                 return courses;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+        }
+
+        public async Task AddCourse(Courses course)
+        {
+             await this._context.Courses.AddAsync(course);
         }
     }
 }
