@@ -8,9 +8,12 @@ namespace MillitaryService.Services.Implementations
     public class PersonnelAssignmentsService: IPersonnelAssignmentsService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public PersonnelAssignmentsService(IUnitOfWork unitOfWork)
+        private readonly ILogger<PersonnelService> _logger;
+
+        public PersonnelAssignmentsService(IUnitOfWork unitOfWork, ILogger<PersonnelService> logger)
         {
             this._unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task AddAssignmentAsync(PersonnelAssignmentsDto newAssignment)
@@ -50,10 +53,11 @@ namespace MillitaryService.Services.Implementations
             return await this._unitOfWork.personnelAssignmentsRepository.GetPersonnelAssignments(personnelId);
         }
 
-        public async Task UpdatePersonnelAssignments(PersonnelAssignmentsDto personnelAssaign,int assignmentId)
+        public async Task UpdatePersonnelAssignments(PersonnelAssignmentsDto personnelAssaign, int assignmentId)
         {
 
             var assignment = await _unitOfWork.personnelAssignmentsRepository.GetByIdAsync(assignmentId);
+            _logger.LogInformation("Assignment: {@Assignment}", assignment);
 
             if (assignment is null || assignment.PersonnelId != personnelAssaign.PersonnelId)
                 throw new NotFoundException("დანიშვნა ვერ მოიძებნა");
@@ -62,16 +66,14 @@ namespace MillitaryService.Services.Implementations
                 throw new BadRequestException("დასრულების თარიღი დაწყებამდე ვერ იქნება");
 
 
-            var personelAssaign = new PersonnelAssignments {
-             Id= assignmentId,
-             PersonnelId= personnelAssaign.PersonnelId,
-             MilitaryUnitId=personnelAssaign.MilitaryUnitId,
-             PositionId = personnelAssaign.PositionId,
-             StartDate = personnelAssaign.StartDate,
-             EndDate = personnelAssaign.EndDate,
-             IsCurrent = personnelAssaign.IsCurrent
-            };
-            this._unitOfWork.personnelAssignmentsRepository.Update(personelAssaign);
+            assignment.PersonnelId = personnelAssaign.PersonnelId;
+            assignment.MilitaryUnitId = personnelAssaign.MilitaryUnitId;
+            assignment.PositionId = personnelAssaign.PositionId;
+            assignment.StartDate = personnelAssaign.StartDate;
+            assignment.EndDate = personnelAssaign.EndDate;
+            assignment.IsCurrent = personnelAssaign.IsCurrent;
+
+            _unitOfWork.personnelAssignmentsRepository.Update(assignment);
             await this._unitOfWork.SaveChangesAsync();
         }
 

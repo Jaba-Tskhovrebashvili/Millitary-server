@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MillitaryService.DTOs;
 using MillitaryService.Services.Interfaces;
 
 namespace MillitaryService.Controllers
@@ -22,6 +23,15 @@ namespace MillitaryService.Controllers
         {
                 var ranks = await this._courseService.GetCourses(search);
                 return StatusCode(200, new { success = true, ranks });
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddCourses([FromBody] CoursesDto courses)
+        {
+            await this._courseService.AddCourses(courses);
+            return StatusCode(200, new { success = true, message="კურსი წარმატებით დაემატა" });
         }
     }
 }

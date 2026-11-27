@@ -20,7 +20,7 @@ namespace MillitaryService.Repositories.Implementations
         {
 
                 var query = _context.Personnel.AsNoTracking();
-
+            query = query.Where(x=>x.IsActive==true);
                 if (!string.IsNullOrWhiteSpace(search))
                 {
                     var pattern = $"%{search.Trim().ToLower()}%";
@@ -29,6 +29,7 @@ namespace MillitaryService.Repositories.Implementations
                 }
                 var count = await query.CountAsync();
                 var Items = await query
+                    .Include(x=>x.Rank)
                     .OrderBy(x => x.RankId)
                      .Skip((page - 1) * pageSize)
                     .Take(pageSize)

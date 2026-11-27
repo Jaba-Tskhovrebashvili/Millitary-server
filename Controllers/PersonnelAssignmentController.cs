@@ -40,10 +40,10 @@ namespace MillitaryService.Controllers
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdatePersonnelAssign([FromBody] PersonnelAssignmentsDto personnelAssignments,int id)
+        public async Task<IActionResult> UpdatePersonnelAssign([FromBody] PersonnelAssignmentsDto personnelAssignments, int id)
         {
-          await this._personnelAssignmentsService.UpdatePersonnelAssignments(personnelAssignments, id);
-          return StatusCode(200, new { success = true, message = "წარმატებით შეიცვალაშ" });
+            await this._personnelAssignmentsService.UpdatePersonnelAssignments(personnelAssignments, id);
+            return StatusCode(200, new { success = true, message = "წარმატებით შეიცვალაშ" });
         }
 
     }
